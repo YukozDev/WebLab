@@ -47,14 +47,6 @@ php composer-setup.php --install-dir=. --filename=composer.phar
 
 ## 2. Installation du projet
 
-```bash
-git clone <url-du-depot> gti619
-cd gti619
-composer install
-cp .env.example .env
-php artisan key:generate
-```
-
 Créer le fichier de base de données puis le peupler :
 
 ```bash
@@ -88,92 +80,7 @@ le changer à la première connexion.
 
 ---
 
-## 4. Matrice des accès (RBAC)
-
-| Route | Administrateur | Préposé résidentiel | Préposé affaire |
-|---|:---:|:---:|:---:|
-| `/clients/residentiels` | ✔ | ✔ | |
-| `/clients/affaires` | ✔ | | ✔ |
-| `/admin/utilisateurs` | ✔ | | |
-| `/admin/parametres` | ✔ | | |
-
-L'autorisation est appliquée par le middleware `role:` déclaré dans
-[`routes/web.php`](routes/web.php). Le masquage des liens dans le menu n'est
-qu'un confort d'affichage : l'accès direct par URL est refusé côté serveur
-(page 403) et journalisé.
-
----
-
-## 5. Organisation du code
-
-```
-app/
-  Http/
-    Controllers/
-      Admin/SecuritySettingController.php   Paramètres de sécurité (admin)
-      Admin/UserController.php              Création de comptes et rôles (admin)
-      Auth/LoginController.php              Connexion, déconnexion
-      Auth/PasswordController.php           Changement de mot de passe
-      ClientController.php                  Listes de clients
-      DashboardController.php               Accueil
-    Middleware/
-      CheckRole.php                         Point de contrôle RBAC
-      EnsurePasswordIsCurrent.php           Changement de mot de passe imposé
-  Models/
-    AuthLog.php  Client.php  PasswordHistory.php  Role.php
-    SecuritySetting.php  User.php
-  Services/
-    PasswordHasher.php    PBKDF2, sel, comparaison en temps constant
-    PasswordManager.php   Cycle de vie du mot de passe, historique
-    PasswordPolicy.php    Norme configurable, génération de mot de passe
-database/
-  migrations/   Schéma (rôles, utilisateurs, historique, journal, sessions)
-  seeders/      Rôles, comptes, clients, paramètres par défaut
-```
-
----
-
-## 6. Travail en équipe
-
-- **Ne jamais committer `.env`** : il contient `APP_KEY`, qui chiffre les cookies
-  et les sessions. Le fichier est dans `.gitignore`. Chaque équipier part de
-  `.env.example` et génère sa propre clé.
-- **`database/database.sqlite` n'est pas versionné.** Après un `git pull`,
-  exécuter `php artisan migrate` (ou `migrate:fresh --seed` pour repartir à
-  neuf) plutôt que de s'échanger le fichier de base.
-- **Migrations** : ne jamais modifier une migration déjà poussée sur le dépôt.
-  En créer une nouvelle avec `php artisan make:migration`.
-- Les migrations utilisent des **classes anonymes**, ce qui évite les collisions
-  de noms de classes lorsque plusieurs personnes en créent en parallèle.
-- `composer.json` épingle la plateforme PHP à 8.4 pour que tout le monde
-  résolve exactement les mêmes versions de dépendances.
-
----
-
-## 7. Choix techniques notables
-
-**Laravel 12 plutôt que le squelette Laravel 8 fourni.** Composer refuse
-d'installer Laravel 8, 10 et 11 : toutes les versions antérieures à 12.61.1
-portent des avis de sécurité non corrigés (injection CRLF dans la règle de
-validation `email`, confusion de chemin sur les URL signées). Passer outre
-aurait exigé de désactiver le contrôle de sécurité de Composer, ce qui est
-difficilement défendable dans un laboratoire de sécurité. Le code du squelette
-(CRUD des clients) a été repris et enrichi.
-
-**PBKDF2-HMAC-SHA256 plutôt que bcrypt ou Argon2id.** L'énoncé exige un sel par
-utilisateur *visible lors de la démonstration*. Les fonctions `password_hash()`
-de PHP génèrent et encapsulent le sel dans l'empreinte, sans l'exposer. PBKDF2
-prend le sel en paramètre explicite, ce qui permet de le stocker et de
-l'afficher. Argon2id serait préférable en production car il est aussi coûteux
-en mémoire, ce qui résiste mieux aux attaques matérielles.
-
-**Aucune ressource externe dans les pages.** Pas de CDN, pas de police
-distante, pas de script tiers : la surface d'attaque par chaîne
-d'approvisionnement est nulle et la démonstration fonctionne sans Internet.
-
----
-
-## 8. État d'avancement
+## État d'avancement
 
 | Partie | Élément | État |
 |---|---|:---:|

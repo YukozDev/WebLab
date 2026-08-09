@@ -6,23 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Http\Request;
 
-/**
- * Evenement du journal de securite.
- *
- * Les enregistrements se font exclusivement par la methode statique
- * enregistrer(), afin que chaque trace comporte systematiquement l'adresse IP
- * et l'agent utilisateur, sans avoir a y penser sur chaque appel.
- */
 class AuthLog extends Model
 {
-    /**
-     * Une trace d'audit n'est jamais modifiee apres son ecriture.
-     *
-     * @var bool
-     */
     public const UPDATED_AT = null;
 
-    // --- Types d'evenements consignes ---
     public const CONNEXION_REUSSIE = 'connexion_reussie';
     public const CONNEXION_ECHOUEE = 'connexion_echouee';
     public const DECONNEXION = 'deconnexion';
@@ -48,25 +35,11 @@ class AuthLog extends Model
         'user_agent',
     ];
 
-    /**
-     * Utilisateur concerne, s'il a pu etre identifie.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * Consigne un evenement de securite dans le journal.
-     *
-     * @param  string  $evenement  Une des constantes de cette classe.
-     * @param  \App\Models\User|null  $utilisateur  Utilisateur concerne, si connu.
-     * @param  string|null  $identifiantSaisi  Identifiant saisi, utile quand le compte n'existe pas.
-     * @param  string|null  $details  Complement lisible (motif d'echec, champ modifie...).
-     * @return \App\Models\AuthLog L'entree de journal creee.
-     */
     public static function enregistrer(
         string $evenement,
         ?User $utilisateur = null,
@@ -88,11 +61,6 @@ class AuthLog extends Model
         ]);
     }
 
-    /**
-     * Libelle lisible de l'evenement, pour affichage dans le journal.
-     *
-     * @return string Le libelle en francais.
-     */
     public function libelleEvenement(): string
     {
         return match ($this->event) {

@@ -9,28 +9,6 @@ use App\Http\Controllers\DashboardController;
 use App\Models\Role;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Routes web
-|--------------------------------------------------------------------------
-|
-| La matrice d'acces du modele RBAC se lit directement ici : chaque route
-| protegee declare, via le middleware role:, la liste des roles autorises.
-| C'est le point de controle unique de l'autorisation ; les vues se contentent
-| d'adapter l'affichage.
-|
-|   Route                    | Administrateur | Prepose residentiel | Prepose affaire
-|   -------------------------|----------------|---------------------|----------------
-|   /clients/residentiels    |       X        |          X          |
-|   /clients/affaires        |       X        |                     |       X
-|   /admin/*                 |       X        |                     |
-|
-*/
-
-/**
- * Racine du site : oriente vers le tableau de bord si une session est ouverte,
- * vers le formulaire de connexion sinon.
- */
 Route::get('/', function () {
     return redirect()->route(auth()->check() ? 'dashboard' : 'login');
 });
@@ -61,8 +39,6 @@ Route::middleware(['auth', 'password.current'])->group(function () {
 
     Route::get('/tableau-de-bord', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Changement de mot de passe : accessible a tout utilisateur authentifie,
-    // y compris lorsqu'un changement lui est impose (voir EnsurePasswordIsCurrent).
     Route::get('/mot-de-passe', [PasswordController::class, 'afficherFormulaire'])->name('password.edit');
     Route::put('/mot-de-passe', [PasswordController::class, 'modifier'])->name('password.update');
 

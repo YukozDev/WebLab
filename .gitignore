@@ -24,4 +24,9 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 /.idea
-/.vscode
+
+# Reglages VS Code : on partage les taches et les extensions suggerees avec
+# l'equipe, mais pas les preferences personnelles (chemins locaux, etc.).
+/.vscode/*
+!/.vscode/tasks.json
+!/.vscode/extensions.json

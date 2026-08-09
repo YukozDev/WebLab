@@ -20,12 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'password.current' => \App\Http\Middleware\EnsurePasswordIsCurrent::class,
         ]);
 
-        // Un visiteur non authentifie est renvoye vers le formulaire de
-        // connexion plutot que vers la route /login attendue par defaut.
         $middleware->redirectGuestsTo(fn () => route('login'));
 
-        // Un utilisateur deja connecte qui demande le formulaire de connexion
-        // est renvoye vers son tableau de bord.
         $middleware->redirectUsersTo(fn () => route('dashboard'));
     })
     ->withExceptions(function (Exceptions $exceptions) {

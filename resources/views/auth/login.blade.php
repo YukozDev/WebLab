@@ -13,7 +13,6 @@
 @section('contenu')
 <div class="connexion">
     <h1>Authentification</h1>
-    <p class="sous-titre">GTI619 — Laboratoire 5</p>
 
     <div class="carte">
         @if ($errors->any())

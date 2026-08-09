@@ -4,30 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * Parametres de securite configurables par l'administrateur.
- *
- * La table ne contient qu'une seule ligne. On y accede toujours par
- * SecuritySetting::courants(), qui la cree au besoin avec les valeurs par
- * defaut et la memorise pour la duree de la requete HTTP.
- */
 class SecuritySetting extends Model
 {
-    /**
-     * Instance memorisee pour la duree de la requete.
-     *
-     * Evite de reinterroger la base a chaque verification de politique
-     * (complexite, tentatives, expiration...) lors d'une meme requete.
-     *
-     * @var \App\Models\SecuritySetting|null
-     */
     protected static ?SecuritySetting $instance = null;
 
-    /**
-     * Attributs remplissables en masse.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'max_login_attempts',
         'failed_attempt_delay_seconds',
@@ -42,11 +22,6 @@ class SecuritySetting extends Model
         'hash_iterations',
     ];
 
-    /**
-     * Conversions de types des attributs.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -64,24 +39,11 @@ class SecuritySetting extends Model
         ];
     }
 
-    /**
-     * Retourne la ligne unique de parametres, en la creant si necessaire.
-     *
-     * @return \App\Models\SecuritySetting Les parametres de securite en vigueur.
-     */
     public static function courants(): self
     {
         return self::$instance ??= self::firstOrCreate(['id' => 1]);
     }
 
-    /**
-     * Oublie l'instance memorisee.
-     *
-     * A appeler apres une mise a jour des parametres pour que le reste de la
-     * requete travaille avec les nouvelles valeurs.
-     *
-     * @return void
-     */
     public static function oublier(): void
     {
         self::$instance = null;

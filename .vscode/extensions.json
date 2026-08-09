@@ -1,0 +1,9 @@
+{
+    // Extensions suggérées à l'ouverture du projet dans VS Code.
+    "recommendations": [
+        "bmewburn.vscode-intelephense-client",
+        "onecentlin.laravel-blade",
+        "amiralizadeh9480.laravel-extra-intellisense",
+        "alexcvzz.vscode-sqlite"
+    ]
+}

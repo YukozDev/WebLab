@@ -37,7 +37,7 @@
                 <th>Nom complet</th>
                 <th>Rôle</th>
                 <th>État</th>
-                <th>Sel (visible pour la démo)</th>
+                <th>Sel</th>
             </tr>
             </thead>
             <tbody>

@@ -1,0 +1,61 @@
+{
+    // Tâches VS Code du projet. Ctrl+Maj+P > "Tasks: Run Task"
+    // ou Ctrl+Maj+B pour lancer directement le serveur (tâche par défaut).
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Lancer le serveur (php artisan serve)",
+            "type": "shell",
+            "command": "php",
+            "args": ["artisan", "serve"],
+            "group": { "kind": "build", "isDefault": true },
+            "isBackground": true,
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Réinitialiser la base (migrate:fresh --seed)",
+            "type": "shell",
+            "command": "php",
+            "args": ["artisan", "migrate:fresh", "--seed"],
+            "presentation": { "reveal": "always", "panel": "dedicated" },
+            "problemMatcher": []
+        },
+        {
+            "label": "Appliquer les nouvelles migrations (migrate)",
+            "type": "shell",
+            "command": "php",
+            "args": ["artisan", "migrate"],
+            "presentation": { "reveal": "always", "panel": "dedicated" },
+            "problemMatcher": []
+        },
+        {
+            "label": "Lister les routes",
+            "type": "shell",
+            "command": "php",
+            "args": ["artisan", "route:list", "--except-vendor"],
+            "presentation": { "reveal": "always", "panel": "dedicated" },
+            "problemMatcher": []
+        },
+        {
+            "label": "Vider les caches (config, routes, vues)",
+            "type": "shell",
+            "command": "php",
+            "args": ["artisan", "optimize:clear"],
+            "presentation": { "reveal": "always", "panel": "dedicated" },
+            "problemMatcher": []
+        },
+        {
+            "label": "Installer les dépendances (composer install)",
+            "type": "shell",
+            "command": "composer",
+            "args": ["install"],
+            "presentation": { "reveal": "always", "panel": "dedicated" },
+            "problemMatcher": []
+        }
+    ]
+}
