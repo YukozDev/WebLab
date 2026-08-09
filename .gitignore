@@ -1,0 +1,27 @@
+/node_modules
+/public/hot
+/public/storage
+/storage/*.key
+/vendor
+
+# Secrets et configuration locale : ne JAMAIS committer.
+# APP_KEY chiffre les cookies et les sessions (cf. Partie 3 du laboratoire).
+.env
+.env.backup
+
+# Base de donnees locale : chaque equipier la regenere avec
+# php artisan migrate:fresh --seed
+/database/*.sqlite
+/database/*.sqlite-journal
+
+# Certificats TLS locaux (Partie 2 : protocole de communication securise)
+/certs
+
+.phpunit.result.cache
+docker-compose.override.yml
+Homestead.json
+Homestead.yaml
+npm-debug.log
+yarn-error.log
+/.idea
+/.vscode
