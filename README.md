@@ -1,10 +1,3 @@
-# GTI619 — Laboratoire 5 : module d'authentification
-
-Application web Laravel 12 implémentant un contrôle d'accès RBAC, un module
-d'authentification et une gestion de session sécurisée.
-
----
-
 ## 1. Prérequis
 
 | Outil | Version | Note |
