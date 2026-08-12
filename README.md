@@ -89,8 +89,8 @@ le changer à la première connexion.
 | 2 | Changement imposé (création, expiration) | ✔ |
 | 2 | Réauthentification (changement de mdp, ajout d'utilisateur) | ✔ |
 | 2 | Journalisation des évènements de sécurité | ✔ |
-| 2 | Nombre maximal de tentatives et blocage | à faire |
-| 2 | Délai de blocage après un échec | à faire |
+| 2 | Nombre maximal de tentatives et blocage | ✔ |
+| 2 | Délai de blocage après un échec | ✔ |
 | 2 | Déblocage et réinitialisation par l'administrateur | à faire |
 | 2 | Consultation du journal par l'administrateur | à faire |
 | 2 | HTTPS (protocole de communication protégé) | à faire |

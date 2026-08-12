@@ -86,8 +86,31 @@ class LoginController extends Controller
             );
 
             throw ValidationException::withMessages([
-                'username' => "Ce compte est bloque. Communiquez avec l'administrateur pour le reactiver.",
+                'username' => "Ce compte est bloqué. Communiquez avec l'administrateur pour le réactiver.",
             ]);
+        }
+
+        // Delai impose entre deux tentatives (Partie 2) : un echec recent
+        // interdit tout nouvel essai avant l'ecoulement de
+        // failed_attempt_delay_seconds. Ceci ralentit une attaque par force
+        // brute independamment du throttle par IP deja applique sur la route.
+        if ($utilisateur->last_failed_at !== null) {
+            $finDuDelai = $utilisateur->last_failed_at->addSeconds($parametres->failed_attempt_delay_seconds);
+
+            if (now()->lessThan($finDuDelai)) {
+                $secondesRestantes = now()->diffInSeconds($finDuDelai);
+
+                AuthLog::enregistrer(
+                    AuthLog::CONNEXION_ECHOUEE,
+                    $utilisateur,
+                    $identifiant,
+                    'Tentative pendant le delai de blocage'
+                );
+
+                throw ValidationException::withMessages([
+                    'username' => "Trop de tentatives rapprochées. Reessayez dans {$secondesRestantes} seconde(s).",
+                ]);
+            }
         }
 
         $motDePasseValide = $this->hacheur->verifier(
@@ -98,6 +121,36 @@ class LoginController extends Controller
         );
 
         if (! $motDePasseValide) {
+            // Chaque echec rapproche le compte du blocage definitif : le
+            // compteur est incremente et l'instant de l'echec retenu pour
+            // faire respecter le delai ci-dessus a la prochaine tentative.
+            $utilisateur->failed_attempts++;
+            $utilisateur->last_failed_at = now();
+
+            // Seuil atteint : le compte est verrouille. Seul un administrateur
+            // pourra le reactiver (voir la verification is_locked plus haut).
+            if ($utilisateur->failed_attempts >= $parametres->max_login_attempts) {
+                $utilisateur->is_locked = true;
+                $utilisateur->locked_at = now();
+            }
+
+            $utilisateur->save();
+
+            if ($utilisateur->is_locked) {
+                AuthLog::enregistrer(
+                    AuthLog::COMPTE_BLOQUE,
+                    $utilisateur,
+                    $identifiant,
+                    "Blocage automatique apres {$utilisateur->failed_attempts} echecs"
+                );
+
+                // Ce blocage vient d'etre declenche par la tentative en cours :
+                // le message doit le refleter plutot que rester generique.
+                throw ValidationException::withMessages([
+                    'username' => "Ce compte vient d'être bloqué après plusieurs échecs. Communiquez avec l'administrateur pour le réactiver.",
+                ]);
+            }
+
             AuthLog::enregistrer(
                 AuthLog::CONNEXION_ECHOUEE,
                 $utilisateur,
