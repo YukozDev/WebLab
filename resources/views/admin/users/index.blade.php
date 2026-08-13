@@ -15,9 +15,23 @@
     <h1>Gestion des utilisateurs</h1>
     <p class="sous-titre">Créer des comptes et leur attribuer un rôle.</p>
 
-    @if (session('motDePasseTemporaire'))
+    <!-- Message pour la création d'un compte -->
+    @if (session('motDePasseTemporaire') && session('utilisateurCree'))
         <div class="alerte alerte-attention">
             <strong>Compte « {{ session('utilisateurCree') }} » créé.</strong>
+            <p style="margin:8px 0">
+                Mot de passe temporaire — transmettez-le à l'utilisateur par un canal sûr.
+                Il ne sera plus affiché après avoir quitté cette page, et l'utilisateur
+                devra le remplacer dès sa première connexion.
+            </p>
+            <code class="secret">{{ session('motDePasseTemporaire') }}</code>
+        </div>
+    @endif
+
+    <!-- Message pour le déblocage d'un compte -->
+    @if (session('motDePasseTemporaire') && session('utilisateurDebloque'))
+        <div class="alerte alerte-attention">
+            <strong>Compte « {{ session('utilisateurDebloque') }} » débloqué.</strong>
             <p style="margin:8px 0">
                 Mot de passe temporaire — transmettez-le à l'utilisateur par un canal sûr.
                 Il ne sera plus affiché après avoir quitté cette page, et l'utilisateur
@@ -38,6 +52,7 @@
                 <th>Rôle</th>
                 <th>État</th>
                 <th>Sel</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -71,6 +86,17 @@
                     </td>
                     <td>
                         <code style="font-size:11px;color:#6b7280;word-break:break-all">{{ $utilisateur->salt }}</code>
+                    </td>
+                    <td>
+                        @if ($utilisateur->is_locked)
+                            <form action="{{ route('admin.utilisateurs.debloquer') }}" method="POST" style="display:inline;">
+                                @csrf
+                                <input type="hidden" name="user_id" value="{{ $utilisateur->id }}">
+                                <button type="submit" class="bouton bouton-attention">Débloquer</button>
+                            </form>
+                        @else
+                            <span class="etiquette etiquette-actif">Aucune action</span>
+                        @endif
                     </td>
                 </tr>
             @endforeach

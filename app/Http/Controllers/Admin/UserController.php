@@ -154,4 +154,40 @@ class UserController extends Controller
             ->with('motDePasseTemporaire', $motDePasseTemporaire)
             ->with('utilisateurCree', $utilisateur->username);
     }
+
+    public function debloquer(Request $requete): RedirectResponse
+    {
+        $donnees = $requete->validate([
+            'user_id' => ['required', 'exists:users,id'],
+        ]);
+
+        $utilisateur = User::find($donnees['user_id']);
+
+        // Utiliser la méthode de génération de mot de passe temporaire de PasswordPolicy
+        $motDePasseTemporaire = $this->politique->genererMotDePasseTemporaire();
+
+        // Réinitialiser les tentatives échouées, débloquer le compte et définir le mot de passe temporaire
+        $utilisateur->forceFill([
+            'failed_attempts' => 0,
+            'last_failed_at' => null,
+            'is_locked' => false,
+            'locked_at' => null,
+        ]);
+
+        $this->gestionnaire->definir($utilisateur, $motDePasseTemporaire, forcerChangement: true);
+
+        // Enregistrer l'action dans les logs
+        AuthLog::enregistrer(
+            AuthLog::COMPTE_DEBLOQUE,
+            $utilisateur,
+            $utilisateur->username,
+            'Compte débloqué et mot de passe réinitialisé par un administrateur'
+        );
+
+        return redirect()->route('admin.utilisateurs.index')->with([
+            'statut' => "Le compte de l'utilisateur « {$utilisateur->username} » a été débloqué et son mot de passe réinitialisé.",
+            'motDePasseTemporaire' => $motDePasseTemporaire,
+            'utilisateurDebloque' => $utilisateur->username,
+        ]);
+    }
 }

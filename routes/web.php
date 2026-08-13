@@ -63,6 +63,7 @@ Route::middleware(['auth', 'password.current'])->group(function () {
             Route::get('/utilisateurs', [UserController::class, 'index'])->name('utilisateurs.index');
             Route::get('/utilisateurs/creer', [UserController::class, 'create'])->name('utilisateurs.create');
             Route::post('/utilisateurs', [UserController::class, 'store'])->name('utilisateurs.store');
+            Route::post('/utilisateurs/debloquer', [UserController::class, 'debloquer'])->name('utilisateurs.debloquer');
             
             Route::get('/journaux', [AuthLogController::class, 'index'])->name('journaux.index');
         });

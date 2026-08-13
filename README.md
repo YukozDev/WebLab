@@ -91,7 +91,7 @@ le changer à la première connexion.
 | 2 | Journalisation des évènements de sécurité | ✔ |
 | 2 | Nombre maximal de tentatives et blocage | ✔ |
 | 2 | Délai de blocage après un échec | ✔ |
-| 2 | Déblocage et réinitialisation par l'administrateur | à faire |
+| 2 | Déblocage et réinitialisation par l'administrateur | ✔ |
 | 2 | Consultation du journal par l'administrateur | ✔ |
 | 2 | HTTPS (protocole de communication protégé) | ✔ |
 | 3 | Protection de l'identifiant de session | partiel (régénéré à la connexion) |
