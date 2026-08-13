@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AuthLogController;
 use App\Http\Controllers\Admin\SecuritySettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\LoginController;
@@ -62,5 +63,7 @@ Route::middleware(['auth', 'password.current'])->group(function () {
             Route::get('/utilisateurs', [UserController::class, 'index'])->name('utilisateurs.index');
             Route::get('/utilisateurs/creer', [UserController::class, 'create'])->name('utilisateurs.create');
             Route::post('/utilisateurs', [UserController::class, 'store'])->name('utilisateurs.store');
+            
+            Route::get('/journaux', [AuthLogController::class, 'index'])->name('journaux.index');
         });
 });
