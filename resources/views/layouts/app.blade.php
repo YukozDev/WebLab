@@ -207,6 +207,7 @@
 
             @if (auth()->user()->isAdministrateur())
                 <a href="{{ route('admin.utilisateurs.index') }}" class="{{ request()->routeIs('admin.utilisateurs.*') ? 'actif' : '' }}">Utilisateurs</a>
+                <a href="{{ route('admin.journaux.index') }}" class="{{ request()->routeIs('admin.journaux.*') ? 'actif' : '' }}">Journaux</a>
                 <a href="{{ route('admin.parametres.edit') }}" class="{{ request()->routeIs('admin.parametres.*') ? 'actif' : '' }}">Paramètres de sécurité</a>
             @endif
         </nav>
